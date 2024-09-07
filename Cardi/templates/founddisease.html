@@ -1,0 +1,200 @@
+{% load static %}
+<!Doctype html>
+<html>
+<head>
+<style>
+
+body {font-family: Arial, Helvetica, sans-serif;
+ 
+}
+
+.title {
+   margin: 1em 0 0.5em 0;
+	font-weight: 600;
+	font-family: 'Titillium Web', sans-serif;
+	position: relative;  
+	font-size: 36px;
+	line-height: 40px;
+	padding: 15px 15px 15px 15%;
+	color: #fd0606;
+	box-shadow: 
+		inset 0 0 0 1px rgba(53,86,129, 0.4), 
+		inset 0 0 5px rgba(53,86,129, 0.5),
+		inset -285px 0 35px white;
+	border-radius: 0 10px 0 10px;
+}
+h1 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .important {
+            font-weight: bold;
+            color: #c0392b; /* Red color */
+        }
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.chart{
+  height: 400px;
+}
+.box {
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .left {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        .right {
+            background-color: lightgreen;
+            padding: 10px;
+        }
+
+
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <h1 class="title">Predicted Result is:      {{d}}</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col p-4">
+            <center><h3>Number of profiles</h3></center>
+            
+            <!-- <img src="{% static '/assets/images/fake.png' %}" alt="No.Of Fake Non Fake" width="300" height="250"></center> -->
+            <div class="chart">
+            
+              <canvas id="myChart"  style="border:1px solid"></canvas>
+            </div>
+            
+            <!-- <center><h3>Model Loss Progression During Training/Validation</h3>
+            
+            <img src="{% static '/assets/images/fake_notfake.png' %}" alt="No.Of Fake Non Fake" width="500" height="250"></center>
+            
+            <center> -->
+            <h3>Accuracy</h3>
+            <!-- <img src="{% static '/assets/images/confusion.png' %}" alt="No.Of Fake Non Fake" width="300" height="300"></center> -->
+            <div class="chart">
+            
+              <canvas id="accchart"  style="border:1px solid"></canvas>
+            </div>
+    
+        </div>
+        <div class="col mt-5 p-2">
+            <h1 style="text-decoration: underline;">Precautions for Cardiovascular Disease</h1>
+        
+            <h2>1. Maintain a Healthy Diet</h2>
+            <ul>
+                <li>Include plenty of fruits, vegetables, whole grains, and lean proteins in your diet.</li>
+                <li>Avoid saturated and trans fats, excess salt, and added sugars.</li>
+                <li>Limit intake of processed and fried foods.</li>
+                <li>Stay hydrated by drinking plenty of water.</li>
+            </ul>
+        
+            <h2>2. Exercise Regularly</h2>
+            <ul>
+                <li>Engage in moderate aerobic exercise for at least 150 minutes per week.</li>
+                <li>Include strength training exercises at least two days per week.</li>
+                <li>Find activities you enjoy to make exercise a regular part of your routine.</li>
+            </ul>
+        
+            <h2>3. Maintain a Healthy Weight</h2>
+            <ul>
+                <li>Monitor your calorie intake and aim to maintain a healthy weight for your height and body type.</li>
+                <li>Consult with a healthcare provider or dietitian for personalized weight management advice.</li>
+            </ul>
+        
+            <h2>4. Manage Stress</h2>
+            <ul>
+                <li>Practice relaxation techniques such as deep breathing, meditation, or yoga.</li>
+                <li>Find healthy ways to cope with stress such as talking to a friend, journaling, or pursuing hobbies.</li>
+            </ul>
+        
+            <h2>5. Avoid Smoking and Limit Alcohol Consumption</h2>
+            <ul>
+                <li>Avoid smoking and exposure to secondhand smoke.</li>
+                <li>Limit alcohol consumption to moderate levels (up to one drink per day for women and up to two drinks per day for men).</li>
+            </ul>
+        
+            <p>These precautions can help reduce the risk of cardiovascular disease and improve overall heart health. However, it's important to consult with a healthcare provider for personalized advice and to monitor your heart health regularly.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+  // Get data from Django context
+  var data = {{ data|safe }};
+  var labels = {{ labels|safe }};
+  
+  var data2 = {{ data2|safe }};
+  var labels2 = {{ labels2|safe }};
+  // Render chart
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var ctx2 = document.getElementById('accchart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: labels,
+          datasets: [{
+              label: 'target',
+              data: data,
+              backgroundColor: ['rgba(69, 153, 114, 1)', 'rgb(217, 106, 63)'],
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true,
+                      stepSize: 20
+                  }
+              }]
+          }
+      }
+  });
+  var myChart2 = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+          labels: labels2,
+          datasets: [{
+              label: 'Accuracy',
+              data: data2,
+              backgroundColor: ['rgba(90, 125, 145, 1)','rgb(65, 42, 92)','rgb(217, 106, 63)'],
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true,
+                      stepSize: 20
+                  }
+              }]
+          }
+      }
+  });
+</script>
+</body>
+</html>
